@@ -24,22 +24,34 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : Intercepto
         }))
         {
             var stopwatch = Stopwatch.StartNew();
-            logger.LogInformation("gRPC call started");
+            logger.LogInformation("gRPC call started for {GrpcMethod}", context.Method);
 
             try
             {
                 var response = await continuation(request, context);
                 logger.LogInformation(
-                    "gRPC call completed in {ElapsedMilliseconds}ms",
+                    "gRPC call completed for {GrpcMethod} in {ElapsedMilliseconds}ms",
+                    context.Method,
                     stopwatch.ElapsedMilliseconds);
                 return response;
+            }
+            catch (RpcException ex) when (IsExpectedClientError(ex.StatusCode))
+            {
+                logger.LogInformation(
+                    "gRPC call rejected for {GrpcMethod} with {StatusCode}: {Detail} in {ElapsedMilliseconds}ms",
+                    context.Method,
+                    ex.StatusCode,
+                    ex.Status.Detail,
+                    stopwatch.ElapsedMilliseconds);
+                throw;
             }
             catch (RpcException ex)
             {
                 logger.LogWarning(
-                    ex,
-                    "gRPC call failed with status {StatusCode} in {ElapsedMilliseconds}ms",
+                    "gRPC call failed for {GrpcMethod} with {StatusCode}: {Detail} in {ElapsedMilliseconds}ms",
+                    context.Method,
                     ex.StatusCode,
+                    ex.Status.Detail,
                     stopwatch.ElapsedMilliseconds);
                 throw;
             }
@@ -47,10 +59,18 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : Intercepto
             {
                 logger.LogError(
                     ex,
-                    "gRPC call failed in {ElapsedMilliseconds}ms",
+                    "gRPC call failed for {GrpcMethod} in {ElapsedMilliseconds}ms",
+                    context.Method,
                     stopwatch.ElapsedMilliseconds);
                 throw;
             }
         }
     }
+
+    private static bool IsExpectedClientError(StatusCode statusCode) =>
+        statusCode is StatusCode.InvalidArgument
+            or StatusCode.NotFound
+            or StatusCode.AlreadyExists
+            or StatusCode.Aborted
+            or StatusCode.FailedPrecondition;
 }

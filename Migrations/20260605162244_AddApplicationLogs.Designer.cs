@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiraisTask.Infrastructure;
 
@@ -11,9 +12,11 @@ using RiraisTask.Infrastructure;
 namespace RiraisTask.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260605162244_AddApplicationLogs")]
+    partial class AddApplicationLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,23 +33,12 @@ namespace RiraisTask.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CorrelationId")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
                     b.Property<string>("Exception")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GrpcMethod")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Level")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("LogEvent")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -57,18 +49,10 @@ namespace RiraisTask.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SourceContext")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
                     b.Property<DateTime?>("TimeStamp")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CorrelationId");
-
-                    b.HasIndex("GrpcMethod");
 
                     b.HasIndex("Level");
 

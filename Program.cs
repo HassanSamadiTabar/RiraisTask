@@ -1,16 +1,35 @@
 using RiraisTask.DependencyInjection;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddGrpcPresentation(builder.Environment);
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+    builder.AddSerilogLogging();
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddGrpcPresentation(builder.Environment);
 
-await app.ApplyDatabaseMigrationsAsync();
+    var app = builder.Build();
 
-app.MapGrpcEndpoints();
-app.MapGet("/", () => "RiraisTask gRPC server is running. Use a gRPC client to call PeopleService.");
+    await app.ApplyDatabaseMigrationsAsync();
 
-app.Run();
+    app.MapGrpcEndpoints();
+    app.MapGet("/", () => "RiraisTask gRPC server is running. Use a gRPC client to call PeopleService.");
+
+    Log.Information("RiraisTask gRPC server started");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+    throw;
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
+}

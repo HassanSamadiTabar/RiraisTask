@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option csharp_namespace = "RiraisTask.Protos";
 
 package person;
@@ -9,7 +11,7 @@ service PeopleService {
   rpc GetPerson    (GetPersonRequest)    returns (PersonDto);
   rpc GetAllPeople (GetAllPeopleRequest) returns (GetAllPeopleResponse);
   rpc UpdatePerson (UpdatePersonRequest) returns (PersonDto);
-  rpc DeletePerson (DeletePersonRequest) returns (DeletePersonResponse);
+  rpc DeletePerson (DeletePersonRequest) returns (google.protobuf.Empty);
 }
 
 message PersonDto {
@@ -18,6 +20,7 @@ message PersonDto {
   string last_name = 3;
   string national_code = 4;
   string birth_date = 5; // yyyy-MM-dd
+  bytes row_version = 6;
 }
 
 message CreatePersonRequest {
@@ -33,6 +36,7 @@ message UpdatePersonRequest {
   string last_name = 3;
   string national_code = 4;
   string birth_date = 5; // yyyy-MM-dd
+  bytes row_version = 6;
 }
 
 message GetPersonRequest {
@@ -40,16 +44,15 @@ message GetPersonRequest {
 }
 
 message GetAllPeopleRequest {
+  int32 page = 1;
+  int32 page_size = 2;
 }
 
 message GetAllPeopleResponse {
   repeated PersonDto people = 1;
+  int32 total_count = 2;
 }
 
 message DeletePersonRequest {
   string id = 1;
-}
-
-message DeletePersonResponse {
-  bool success = 1;
 }

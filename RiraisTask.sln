@@ -5,6 +5,12 @@ VisualStudioVersion = 17.14.37314.3 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiraisTask", "RiraisTask.csproj", "{253FB5E9-88D5-4600-9C61-43555A465AC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormClient", "..\WinFormClient\WinFormClient.csproj", "{BF3E081D-B596-4C48-AE29-ECFD30AD47B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{17A7A37C-241C-4EB0-B89C-34E20022DFB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +21,17 @@ Global
 		{253FB5E9-88D5-4600-9C61-43555A465AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{253FB5E9-88D5-4600-9C61-43555A465AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{253FB5E9-88D5-4600-9C61-43555A465AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3E081D-B596-4C48-AE29-ECFD30AD47B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3E081D-B596-4C48-AE29-ECFD30AD47B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3E081D-B596-4C48-AE29-ECFD30AD47B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3E081D-B596-4C48-AE29-ECFD30AD47B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{253FB5E9-88D5-4600-9C61-43555A465AC5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{BF3E081D-B596-4C48-AE29-ECFD30AD47B7} = {17A7A37C-241C-4EB0-B89C-34E20022DFB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60D23F45-E9D4-40D8-A997-3DEBA238D26F}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option csharp_namespace = "RiraisTask.Protos";
+
+package person;
+
+service PeopleService {
+  rpc CreatePerson (CreatePersonRequest) returns (PersonDto);
+  rpc GetPerson    (GetPersonRequest)    returns (PersonDto);
+  rpc GetAllPeople (GetAllPeopleRequest) returns (GetAllPeopleResponse);
+  rpc UpdatePerson (UpdatePersonRequest) returns (PersonDto);
+  rpc DeletePerson (DeletePersonRequest) returns (DeletePersonResponse);
+}
+
+message PersonDto {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string national_code = 4;
+  string birth_date = 5; // yyyy-MM-dd
+}
+
+message CreatePersonRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string national_code = 3;
+  string birth_date = 4; // yyyy-MM-dd
+}
+
+message UpdatePersonRequest {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string national_code = 4;
+  string birth_date = 5; // yyyy-MM-dd
+}
+
+message GetPersonRequest {
+  string id = 1;
+}
+
+message GetAllPeopleRequest {
+}
+
+message GetAllPeopleResponse {
+  repeated PersonDto people = 1;
+}
+
+message DeletePersonRequest {
+  string id = 1;
+}
+
+message DeletePersonResponse {
+  bool success = 1;
+}

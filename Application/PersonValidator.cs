@@ -66,6 +66,23 @@ public static class PersonValidator
         return page <= 0 ? 1 : page;
     }
 
+    public static string? NormalizeSearch(string? search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+        {
+            return null;
+        }
+
+        search = search.Trim();
+
+        if (search.Length > MaxNameLength)
+        {
+            throw new PersonValidationException($"Search term cannot exceed {MaxNameLength} characters.");
+        }
+
+        return search;
+    }
+
     private static (string FirstName, string LastName, string NationalCode, DateOnly BirthDate) Normalize(
         string firstName,
         string lastName,

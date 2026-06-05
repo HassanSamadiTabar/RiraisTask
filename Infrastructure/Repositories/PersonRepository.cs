@@ -37,9 +37,20 @@ public class PersonRepository(AppDbContext db) : IPersonRepository
     public async Task<(List<Person> People, int TotalCount)> GetPagedAsync(
         int page,
         int pageSize,
+        string? search,
         CancellationToken cancellationToken)
     {
-        var query = db.People.AsNoTracking()
+        var query = db.People.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(x =>
+                x.FirstName.Contains(search) ||
+                x.LastName.Contains(search) ||
+                x.NationalCode.Contains(search));
+        }
+
+        query = query
             .OrderBy(x => x.LastName)
             .ThenBy(x => x.FirstName);
 

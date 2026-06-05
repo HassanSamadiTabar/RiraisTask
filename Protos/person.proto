@@ -6,6 +6,7 @@ option csharp_namespace = "RiraisTask.Protos";
 
 package person;
 
+// PeopleService manages person records (CRUD + paginated list).
 service PeopleService {
   rpc CreatePerson (CreatePersonRequest) returns (PersonDto);
   rpc GetPerson    (GetPersonRequest)    returns (PersonDto);
@@ -20,7 +21,7 @@ message PersonDto {
   string last_name = 3;
   string national_code = 4;
   string birth_date = 5; // yyyy-MM-dd
-  bytes row_version = 6;
+  bytes row_version = 6; // required for optimistic concurrency on update
 }
 
 message CreatePersonRequest {
@@ -44,8 +45,9 @@ message GetPersonRequest {
 }
 
 message GetAllPeopleRequest {
-  int32 page = 1;
-  int32 page_size = 2;
+  int32 page = 1;       // 1-based; defaults to 1 when omitted or <= 0
+  int32 page_size = 2;  // defaults to 50; max 200
+  string search = 3;    // optional filter on first name, last name, or national code
 }
 
 message GetAllPeopleResponse {

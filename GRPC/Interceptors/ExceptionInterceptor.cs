@@ -31,6 +31,11 @@ public class ExceptionInterceptor(ILogger<ExceptionInterceptor> logger) : Interc
         {
             throw new RpcException(new Status(StatusCode.Aborted, ex.Message));
         }
+        catch (PersonDatabaseException ex)
+        {
+            logger.LogError(ex, "Database error in gRPC call {Method}", context.Method);
+            throw new RpcException(new Status(StatusCode.Internal, "A database error occurred."));
+        }
         catch (RpcException)
         {
             throw;

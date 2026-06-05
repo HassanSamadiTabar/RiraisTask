@@ -18,7 +18,7 @@ public static class DatabaseExceptionHelper
             return new PersonConflictException("National code already exists.");
         }
 
-        return new InvalidOperationException($"Database error while {operation}.", exception);
+        return new PersonDatabaseException($"Database error while {operation}.", exception);
     }
 
     private static bool IsUniqueConstraintViolation(DbUpdateException exception)

@@ -56,12 +56,17 @@ public class PersonService(
         return Map(person);
     }
 
-    public async Task<PagedPeopleResult> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedPeopleResult> GetAllAsync(
+        int page,
+        int pageSize,
+        string? search,
+        CancellationToken cancellationToken)
     {
         page = PersonValidator.NormalizePage(page);
         pageSize = PersonValidator.NormalizePagination(page, pageSize);
+        search = PersonValidator.NormalizeSearch(search);
 
-        var (people, totalCount) = await repository.GetPagedAsync(page, pageSize, cancellationToken);
+        var (people, totalCount) = await repository.GetPagedAsync(page, pageSize, search, cancellationToken);
         return new PagedPeopleResult(people.Select(Map).ToList(), totalCount);
     }
 

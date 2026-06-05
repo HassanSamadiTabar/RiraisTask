@@ -1,5 +1,5 @@
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Google.Protobuf.WellKnownTypes;
 using RiraisTask.Application;
 using RiraisTask.Protos;
 
@@ -21,8 +21,10 @@ public class PeopleGrpcService(IPersonService personService) : PeopleService.Peo
 
     public override async Task<PersonDto> GetPerson(GetPersonRequest request, ServerCallContext context)
     {
-        var id = ParseId(request.Id);
-        var person = await personService.GetByIdAsync(id, context.CancellationToken);
+        var person = await personService.GetByIdAsync(
+            GrpcRequestParser.ParsePersonId(request.Id),
+            context.CancellationToken);
+
         return PersonGrpcMapper.ToDto(person);
     }
 
@@ -31,6 +33,7 @@ public class PeopleGrpcService(IPersonService personService) : PeopleService.Peo
         var result = await personService.GetAllAsync(
             request.Page,
             request.PageSize,
+            request.Search,
             context.CancellationToken);
 
         return PersonGrpcMapper.ToPagedResponse(result);
@@ -39,7 +42,7 @@ public class PeopleGrpcService(IPersonService personService) : PeopleService.Peo
     public override async Task<PersonDto> UpdatePerson(UpdatePersonRequest request, ServerCallContext context)
     {
         var input = PersonValidator.ValidateUpdate(
-            ParseId(request.Id),
+            GrpcRequestParser.ParsePersonId(request.Id),
             request.FirstName,
             request.LastName,
             request.NationalCode,
@@ -52,17 +55,10 @@ public class PeopleGrpcService(IPersonService personService) : PeopleService.Peo
 
     public override async Task<Empty> DeletePerson(DeletePersonRequest request, ServerCallContext context)
     {
-        await personService.DeleteAsync(ParseId(request.Id), context.CancellationToken);
+        await personService.DeleteAsync(
+            GrpcRequestParser.ParsePersonId(request.Id),
+            context.CancellationToken);
+
         return new Empty();
-    }
-
-    private static Guid ParseId(string id)
-    {
-        if (!Guid.TryParse(id, out var parsedId))
-        {
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid id."));
-        }
-
-        return parsedId;
     }
 }

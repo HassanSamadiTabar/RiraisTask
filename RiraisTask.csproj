@@ -7,6 +7,7 @@
     <UserSecretsId>c22d7a76-67e7-4fb9-9c52-54c033b22448</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <DefaultItemExcludes>$(DefaultItemExcludes);WinFormClient/**;RiraisTask.Tests/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
